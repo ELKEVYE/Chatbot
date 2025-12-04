@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Patoche - Le Daron Ultime</title>
+    <style>
+        body {font-family: Comic Sans MS, cursive; background: #ffeb99; margin:0;}
+        .container {max-width: 800px; margin: 30px auto; padding: 20px; text-align:center;}
+        #patoche {width: 280px; border-radius: 50%; border: 12px solid #fff; box-shadow: 0 0 20px rgba(0,0,0,0.5);}
+        .chat {height: 500px; overflow-y: scroll; background: white; padding: 20px; border: 5px solid black; margin: 20px 0; text-align:left;}
+        .message {margin: 15px 0;}
+        .user {text-align: right; color: navy;}
+        .patoche {background: #ffcc00; padding: 15px; border-radius: 20px; display: inline-block; max-width:80%;}
+        input[type=text] {width: 75%; padding: 15px; font-size: 18px; border: 3px solid black;}
+        button {padding: 15px 30px; font-size: 18px; background: red; color: white; border: none; cursor:pointer;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🛠️ PATOCHE - LE DARON ULTIME 🛠️</h1>
+    <img id="patoche" src="https://i.postimg.cc/0jZxKx9k/patoche-realiste.jpg" alt="Patoche">
+    <p><i>« À mon époque on réparait avec du scotch et du Ricard, et voilà le travail ! »</i></p>
+
+    <div class="chat" id="chat"></div>
+    <input type="text" id="msg" placeholder="Parle à Patoche, mon grand..." onkeypress="if(event.key=='Enter') send()">
+    <button onclick="send()">Envoyer</button>
+</div>
+
+<script>
+function send() {
+    let msg = document.getElementById("msg").value.trim();
+    if (!msg) return;
+    let chat = document.getElementById("chat");
+    chat.innerHTML += `<div class="message user"><b>Toi :</b> ${msg}</div>`;
+    
+    fetch(`/ask/?msg=${encodeURIComponent(msg)}`)
+        .then(r => r.json())
+        .then(data => {
+            chat.innerHTML += `<div class="message"><div class="patoche"><b>Patoche :</b> ${data.reponse}</div></div>`;
+            chat.scrollTop = chat.scrollHeight;
+        });
+    document.getElementById("msg").value = "";
+}
+</script>
+</body>
+</html>
